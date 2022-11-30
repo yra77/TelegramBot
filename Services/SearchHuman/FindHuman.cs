@@ -1,12 +1,11 @@
 ﻿
 
-using TelegramBot.Logs;
+using TelegramBot.Services.Logs;
 using System;
 using System.Threading.Tasks;
-using System.Linq;
 
 
-namespace TelegramBot.SearchHuman
+namespace TelegramBot.Services.SearchHuman
 {
     internal class FindHuman : IFindHuman
     {

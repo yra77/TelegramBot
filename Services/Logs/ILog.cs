@@ -1,7 +1,7 @@
 ﻿
 
 
-namespace TelegramBot.Logs
+namespace TelegramBot.Services.Logs
 {
     internal interface ILog
     {

@@ -1,9 +1,9 @@
 ﻿
 
-using TelegramBot.DataBase;
-using TelegramBot.SearchHuman;
+using TelegramBot.Services.DataBase;
+using TelegramBot.Services.SearchHuman;
 using TelegramBot.Constatnts;
-using TelegramBot.Logs;
+using TelegramBot.Services.Logs;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -18,7 +18,7 @@ using System.Threading;
 
 namespace TelegramBot.ConnectToTelegram
 {
-    internal class ConnectionTelegram
+    internal sealed class ConnectionTelegram
     {
 
         private readonly ILog _log;
@@ -27,12 +27,22 @@ namespace TelegramBot.ConnectToTelegram
         private readonly ITelegramBotClient _bot;
 
 
-        public ConnectionTelegram(IDataManager db, ILog log)
+        public void Execute() 
+        { 
+            _=Task.Run(() => 
+            { 
+                _=Start_Async(); 
+            }); 
+        }
+
+        public ConnectionTelegram(IDataManager db, 
+                                  ILog log, 
+                                  IFindHuman findHuman)
         {
             _log = log;
             _db = db;
             _bot = new TelegramBotClient(Constatnts.Constant.TOKEN_TELEGRAM);
-            _findHuman = new FindHuman();
+            _findHuman = findHuman;
         }
 
 
@@ -123,7 +133,7 @@ namespace TelegramBot.ConnectToTelegram
             return Task.CompletedTask;
         }
 
-        public async Task Start_Async()
+        private async Task Start_Async()
         {
             _log.logDelegate(this, "Телеграм бот " + (await _bot.GetMeAsync()).FirstName + " почав роботу");
 

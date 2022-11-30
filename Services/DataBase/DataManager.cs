@@ -1,7 +1,7 @@
 ﻿
 
 using TelegramBot.Models;
-using TelegramBot.Logs;
+using TelegramBot.Services.Logs;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace TelegramBot.DataBase
+namespace TelegramBot.Services.DataBase
 {
     internal class DataManager : DbContext, IDataManager
     {

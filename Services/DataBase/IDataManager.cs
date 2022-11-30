@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
-namespace TelegramBot.DataBase
+namespace TelegramBot.Services.DataBase
 {
     internal interface IDataManager
     {

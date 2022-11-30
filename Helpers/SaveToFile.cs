@@ -1,9 +1,9 @@
 ﻿
 
 using TelegramBot.Constatnts;
+using TelegramBot.Services.Logs;
 
 using Telegram.Bot;
-using TelegramBot.Logs;
 
 using System;
 using System.IO;

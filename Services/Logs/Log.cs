@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace TelegramBot.Logs
+namespace TelegramBot.Services.Logs
 {
 
     public delegate void LogDelegate(object obj, string str);

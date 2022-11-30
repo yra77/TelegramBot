@@ -1,9 +1,10 @@
 ﻿
 
 
-using TelegramBot.Logs;
+using TelegramBot.Services.Logs;
 
-namespace TelegramBot.SearchHuman
+
+namespace TelegramBot.Services.SearchHuman
 {
     internal interface IFindHuman
     {

@@ -1,10 +1,10 @@
 ﻿
 
 using TelegramBot.Constatnts;
-using TelegramBot.DataBase;
+using TelegramBot.Services.DataBase;
 using TelegramBot.Helpers;
-using TelegramBot.Logs;
-using TelegramBot.SearchHuman;
+using TelegramBot.Services.Logs;
+using TelegramBot.Services.SearchHuman;
 
 using Telegram.Bot;
 using Telegram.Bot.Types;
