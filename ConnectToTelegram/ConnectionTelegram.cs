@@ -1,7 +1,5 @@
 ﻿
 
-using TelegramBot.Services.DataBase;
-using TelegramBot.Services.SearchHuman;
 using TelegramBot.Constatnts;
 using TelegramBot.Services.Logs;
 
@@ -22,27 +20,13 @@ namespace TelegramBot.ConnectToTelegram
     {
 
         private readonly ILog _log;
-        private readonly IFindHuman _findHuman;
-        private readonly IDataManager _db;
         private readonly ITelegramBotClient _bot;
 
 
-        public void Execute() 
-        { 
-            _=Task.Run(() => 
-            { 
-                _=Start_Async(); 
-            }); 
-        }
-
-        public ConnectionTelegram(IDataManager db, 
-                                  ILog log, 
-                                  IFindHuman findHuman)
+        public ConnectionTelegram(ILog log)
         {
             _log = log;
-            _db = db;
-            _bot = new TelegramBotClient(Constatnts.Constant.TOKEN_TELEGRAM);
-            _findHuman = findHuman;
+            _bot = new TelegramBotClient(Constant.TOKEN_TELEGRAM);
         }
 
 
@@ -63,15 +47,15 @@ namespace TelegramBot.ConnectToTelegram
             {
                 Message message = update.Message;
 
-                Console.WriteLine(message.From.FirstName
-                    + "\n" + message.From.Username
-                    + "\n" + message.From.LastName
-                    + "\n" + message.From.Id
-                    + "\n" + message.Date
-                    + "\n" + message.Location
-                    + "\n" + message.Caption
-                    + "\n" + message.Text
-                    + "\n Is bot - " + message.From.IsBot);
+                //Console.WriteLine(message.From.FirstName
+                //    + "\n" + message.From.Username
+                //    + "\n" + message.From.LastName
+                //    + "\n" + message.From.Id
+                //    + "\n" + message.Date
+                //    + "\n" + message.Location
+                //    + "\n" + message.Caption
+                //    + "\n" + message.Text
+                //    + "\n Is bot - " + message.From.IsBot);
 
                 switch (message.Type)
                 {
@@ -80,7 +64,7 @@ namespace TelegramBot.ConnectToTelegram
                             _ = Task.Run(async () =>
                             {
                                 InputText inputText = new InputText();
-                                await inputText.InputText_Async(botClient, _findHuman, _log, _db, message, update);
+                                await inputText.InputText_Async(botClient, _log, message, update);
                             });
                             break;
                         }
@@ -89,7 +73,7 @@ namespace TelegramBot.ConnectToTelegram
                             _ = Task.Run(async () =>
                             {
                                 InputPhoto inputPhoto = new InputPhoto();
-                                await inputPhoto.InputPhoto_Async(botClient, _findHuman, _log, _db, message, update);
+                                await inputPhoto.InputPhoto_Async(botClient, _log, message, update);
                             });
                             break;
                         }
@@ -98,7 +82,7 @@ namespace TelegramBot.ConnectToTelegram
                             _ = Task.Run(async () =>
                             {
                                 InputLocation inputLocation = new InputLocation();
-                                await inputLocation.InputLocation_Async(botClient, _findHuman, _log, _db, message, update);
+                                await inputLocation.InputLocation_Async(botClient, _log, message, update);
                             });
                             break;
                         }
@@ -133,7 +117,7 @@ namespace TelegramBot.ConnectToTelegram
             return Task.CompletedTask;
         }
 
-        private async Task Start_Async()
+        public async Task Start_Async()
         {
             _log.logDelegate(this, "Телеграм бот " + (await _bot.GetMeAsync()).FirstName + " почав роботу");
 
@@ -145,8 +129,6 @@ namespace TelegramBot.ConnectToTelegram
             };
 
             _bot.StartReceiving(HandleUpdate_Async, HandleError_Async, receiverOptions, cancellationToken);
-
-            Console.ReadLine();
         }
     }
 }

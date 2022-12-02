@@ -1,14 +1,14 @@
 ﻿
+
+using TelegramBot.Services.SearchHuman;
 using TelegramBot.ConnectToTelegram;
 using TelegramBot.Services.DataBase;
-using TelegramBot.Helpers;
 using TelegramBot.Services.Logs;
-using TelegramBot.Services.SearchHuman;
-
-using Microsoft.Extensions.DependencyInjection;
+using TelegramBot.Helpers;
 
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 
 namespace TelegramBot
@@ -18,25 +18,29 @@ namespace TelegramBot
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            CreateFolders.FoldersExist();
 
-            var services = new ServiceCollection();
-            ConfigureServices(services);
-            services
-                .AddSingleton<ConnectionTelegram, ConnectionTelegram>()
-                .BuildServiceProvider()
-                .GetService<ConnectionTelegram>()
-                .Execute();
-          
+            CreateFolders.FoldersExist();//create folders if not
+            FindHuman.InitializeStatic();//data to memory
+
+            ILog log = new Log();
+            IDataManager db = new DataManager(log);
+
+            ConnectionTelegram connectionTelegram = new ConnectionTelegram(log);
+ 
+            _=Task.Run(() =>
+            {
+                _ = connectionTelegram.Start_Async();
+            });
+
+            _ = Task.Run(() =>
+            {
+                AddData addData = new AddData(log, db);
+            });
+
+            PrintTable printTable = new PrintTable(db);
+            printTable.Print_Table();
+
             Console.ReadLine();
-        }
-
-        private static void ConfigureServices(IServiceCollection services)
-        {
-            services
-                .AddSingleton<ILog, Log>()
-                .AddSingleton<IFindHuman, FindHuman>()
-            .AddSingleton<IDataManager, DataManager>();
         }
 
     }

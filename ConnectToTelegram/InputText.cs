@@ -10,6 +10,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 
 using System.Threading.Tasks;
+using System.Globalization;
 
 
 namespace TelegramBot.ConnectToTelegram
@@ -18,24 +19,28 @@ namespace TelegramBot.ConnectToTelegram
     {
 
         public async Task InputText_Async(ITelegramBotClient botClient,
-                                           IFindHuman _findHuman,
                                            ILog _log,
-                                           IDataManager _db,
                                            Message message,
                                            Update update)
         {
-            if (MessagesVerification.VerifyText(message.Text))
+
+            MessagesVerification messagesVerification = new MessagesVerification();
+
+
+            if (messagesVerification.VerifyText(message.Text))
             {
-                var profelInfo = ConvertToProfileInfo.ToProfelInfo(message);
-                string searchHuman = _findHuman.SearchInList(message.Text, _log);//checking human
+
+                message.Text = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(message.Text.ToLower());
+
+                ConvertToProfileInfo convertToProfile = new ConvertToProfileInfo();
+                var profelInfo = convertToProfile.ToProfelInfo(message);
+
+                IFindHuman findHuman = new FindHuman();
+                string searchHuman = findHuman.SearchInList(message.Text, _log);//checking human
 
                 await botClient.SendTextMessageAsync(message.From.Id, searchHuman);
 
-                if (await _db.Write_Async(profelInfo) != 1)
-                {
-                    await botClient.SendTextMessageAsync(message.From.Id, ConstantMessage.ERRORSAVE);
-                    _log.logDelegate(this, ConstantMessage.ERRORSAVE);
-                }
+                _ = AddData.Add_DB_Queue.TryEnqueue(profelInfo);
             }
             else
             {

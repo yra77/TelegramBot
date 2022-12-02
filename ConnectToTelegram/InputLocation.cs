@@ -1,7 +1,5 @@
 ﻿
 
-using TelegramBot.Services.SearchHuman;
-using TelegramBot.Constatnts;
 using TelegramBot.Services.DataBase;
 using TelegramBot.Helpers;
 using TelegramBot.Services.Logs;
@@ -18,19 +16,15 @@ namespace TelegramBot.ConnectToTelegram
     {
 
         public async Task InputLocation_Async(ITelegramBotClient botClient,
-                                           IFindHuman _findHuman,
                                            ILog _log,
-                                           IDataManager _db,
                                            Message message,
                                            Update update)
         {
-            var profelInfo = ConvertToProfileInfo.ToProfelInfo(message);
+            ConvertToProfileInfo convertToProfile = new ConvertToProfileInfo();
+            var profelInfo = convertToProfile.ToProfelInfo(message);
 
-            if (await _db.Write_Async(profelInfo) != 1)
-            {
-                await botClient.SendTextMessageAsync(message.From.Id, ConstantMessage.ERRORSAVE);
-                _log.logDelegate(this, ConstantMessage.ERRORSAVE);
-            }
+            _ = AddData.Add_DB_Queue.TryEnqueue(profelInfo);
         }
+
     }
 }

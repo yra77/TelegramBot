@@ -23,11 +23,16 @@ namespace TelegramBot.Services.Logs
         {
             logDelegate = HandleOut;
             _asyncQueue = new AsyncQueue<string>();
+            logDelegate(this, "Логірованиє працює.");
         }
 
         private void HandleOut(object obj, string str)
         {
-            _ = _asyncQueue.TryEnqueue(DateTime.Now.ToString() + "\n\t" + str + "\n\t" + obj.ToString());
+            if (obj != null)
+            {
+                _ = _asyncQueue.TryEnqueue(DateTime.Now.ToString() + "\n\t" +
+                                           str + "\n\t" + obj.ToString());
+            }
 
             _=Task.Run(() => 
             {
@@ -64,11 +69,13 @@ namespace TelegramBot.Services.Logs
 
         private string RealPath()
         {
-            string path = Constatnts.ConstantFolders.LOGS_FOLDER + DateTime.Now.Date.ToString().First() + ".txt";
+            string path = Constatnts.ConstantFolders.LOGS_FOLDER + 
+                          DateTime.Now.Date.ToString().Split(' ').First() + ".txt";
             
             if(!File.Exists(path))
             {
-                _ = File.Create(path);
+                var a = File.Create(path);
+                a.Close();
             }
 
             return path;

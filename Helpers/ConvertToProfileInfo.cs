@@ -7,7 +7,7 @@ namespace TelegramBot.Helpers
 {
     internal class ConvertToProfileInfo
     {
-        public static ProfileInfo ToProfelInfo(Telegram.Bot.Types.Message message, string pathToPhoto = null)
+        public ProfileInfo ToProfelInfo(Telegram.Bot.Types.Message message, string pathToPhoto = null)
         {
             ProfileInfo profileInfo = new ProfileInfo()
             {

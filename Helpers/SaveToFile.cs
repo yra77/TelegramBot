@@ -16,7 +16,7 @@ namespace TelegramBot.Helpers
     internal class SaveToFile
     {
 
-        public static async Task<string> SaveFoto_Async(ITelegramBotClient botClient, string fileId, ILog log)
+        public async Task<string> SaveFoto_Async(ITelegramBotClient botClient, string fileId, ILog log)
         {
             try
             {
